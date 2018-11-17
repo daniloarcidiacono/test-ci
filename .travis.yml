@@ -9,3 +9,15 @@ script:
 
 after_success:
 - bash <(curl -s https://codecov.io/bash)
+
+before_deploy:
+  # Set up git user name and tag this commit
+  - git config --local user.name "daniloarcidiacono"
+  - git config --local user.email "danilo.arcidiacono@gmail.com"
+  - git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
+
+deploy:
+  provider: releases
+  api_key: $GITHUB_OAUTH2_TOKEN
+  file: target/test-ci-0.0.1-SNAPSHOT.jar
+  skip_cleanup: true
